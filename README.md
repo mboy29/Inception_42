@@ -1,6 +1,6 @@
 <h1>Inception</h1>
 
-<h3>Final grade: 100%<h3>
+<h3>Final grade: 100%</h3>
 
 <p>For this project you will have to set up a mini-infrastructure with different services.</p>
 
