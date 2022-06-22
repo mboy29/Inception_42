@@ -1,19 +1,21 @@
-<h3>Inception</h3>
+<h1>Inception</h1>
 
-Final grade: 100%
+<h3>Final grade: 100%<h3>
 
-For this project you will have to set up a mini-infrastructure with different services.
+<p>For this project you will have to set up a mini-infrastructure with different services.</p>
 
+<ul>
 More specifically, you will have to set up:
-- A Docker container containing NGINX with TLSv1.2 or TLSv1.3 only;
-- A Docker container containing WordPress + PHP-fpm (installed and configured) only without NGINX;
-- A Docker container containing MariaDB only without NGINX;
-- A volume containing your WordPress database;
-- A second volume containing your WordPress site files;
-- A docker-network that will link your containers.
+	<li>A Docker container containing NGINX with TLSv1.2 or TLSv1.3 only;</li>
+	<li>A Docker container containing WordPress + PHP-fpm (installed and configured) only without NGINX;</li>
+	<li>A Docker container containing MariaDB only without NGINX;</li>
+	<li>A volume containing your WordPress database;</li>
+	<li>A second volume containing your WordPress site files;</li>
+	<li>A docker-network that will link your containers.</li>
+</ul>
 
-Beware, this project will have to be carried out in a virtual machine.
+<p>Beware, this project will have to be carried out in a virtual machine.</p>
 
-For any questions regarding Docker, please check out the Doc_42 pdf located at the root of the repository.
+<p>For any questions regarding Docker, please check out the Doc_42 pdf located at the root of the repository.</p>
 
-Good luck!
+<h3>Good luck!</h3>
