@@ -1,0 +1,115 @@
+# ----------------------------------------------------------------------
+# -> Inception docker-compose yml
+# Config file for Docker Compose. It allows to deploy, combine, 
+# and configure multiple docker containers at the same time.
+# The Docker "rule" is to outsource every single process to its
+# own Docker container.
+# ----------------------------------------------------------------------
+
+# -> Latest version of docker-compose
+version: '3'
+
+# -> Services
+services:
+    # -> Nginx : Open source software for web serving, reverse
+    # proxying, caching, load balancing, media streaming, and more. 
+    nginx:
+
+        depends_on: # -> Build wordpress before
+            - wordpress
+        build: requirements/nginx/ # -> Path to configuration files
+        image: nginx # -> Based on nginx image
+        container_name: nginx # -> Name
+        ports: # -> Exposed on default port 443
+            - "443:443"
+        networks: # -> Belongs to inception network
+            - inception
+        volumes: # -> Path to corresponding volume
+            - /home/mboy/data/wordpress:/var/www/html
+        restart: unless-stopped # -> Restart container if it is stopped
+    
+    # -> Wordpress : Content management system (CMS) that allows you 
+    # to host and build websites.
+    wordpress:
+        
+        depends_on: # -> Build mariadp before
+            - mariadb
+        build:  # -> Building information
+            context: requirements/wordpress/ # -> Path to configuration files
+            args: # -> Arguments to use when buliding container
+                DOMAIN_NAME: ${DOMAIN_NAME}
+                MDB_USER: ${MDB_USER}
+                MDB_PWS: ${MDB_PWS}
+                MDB: ${MDB}
+                WP_ADMIN: ${WP_ADMIN}
+                WP_ADMIN_PSW: ${WP_ADMIN_PSW}
+                WP_USER: ${WP_USER}
+                WP_USER_PSW: ${WP_USER_PSW}
+        image: wordpress # -> Based on wordpress image
+        container_name: wordpress # -> Name
+        expose: # -> Exposed on default port 3306
+            - "3306"
+        networks: # -> Belongs to inception network
+            - inception
+        volumes: # -> Path to corresponding volume
+            - /home/mboy/data/wordpress:/var/www/html
+        env_file: # -> Path to environment file
+            - .env
+        environment: # -> Environment variables
+            - DOMAIN_NAME=${DOMAIN_NAME}
+            - MDB_USER=${MDB_USER}
+            - MDB_PWS=${MDB_PWS}
+            - MDB=${MDB}
+            - WP_ADMIN=${WP_ADMIN}
+            - WP_ADMIN_PSW=${WP_ADMIN_PSW}
+            - WP_USER=${WP_USER}
+            - WP_USER_PSW=${WP_USER_PSW}
+        restart: on-failure # -> Restart container if it fails
+
+    # -> MariaDB : Open source relational database management system
+    # (DBMS) that is a compatible drop-in replacement for the widely
+    # used MySQL database technology.
+    mariadb:
+        
+        build: requirements/mariadb/ # -> Path to configuration files
+        image: mariadb # -> Based on mariadb image
+        container_name: mariadb  # -> Name
+        expose: # -> Exposed on default port 9000
+            - "9000"
+        networks: # -> Belongs to inception network
+            - inception
+        volumes: # -> Path to corresponding volume
+            - /home/mboy/data/mariadb:/var/lib/mysql
+        env_file: # -> Path to environment file
+            - .env
+        environment: # -> Environment variables
+            - MDB_USER=${MDB_USER}
+            - MDB_PWS=${MDB_PWS}
+            - MDB=${MDB}
+            - MDB_ROOT_PSW=${MDB_ROOT_PSW}
+        restart: on-failure # -> Restart container if it fails
+
+# -> Networks
+networks:
+    inception: # -> Network properties
+        name: inception # -> Name
+        driver: bridge # -> Type
+
+# -> Volumes
+volumes:
+
+    # -> Mariadb volume
+    volume_mariadb: # -> Name
+        driver: local # -> Type
+        driver_opts:
+            o: 'bind'
+            type: 'none'
+            device: '/Users/mboy/inception/inception/volumes'
+    
+    # -> Mariadb volume
+    volume_wordpress: # -> Name
+        driver: local # -> Type
+        driver_opts: # -> Options
+            o: 'bind'
+            type: 'none' 
+            device: '/Users/mboy/inception/inception/volumes'
